@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 13, 2024 at 10:22 AM
+-- Generation Time: Nov 12, 2024 at 09:21 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -37,6 +37,39 @@ CREATE TABLE `inventory_transactions` (
   `created_by` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `inventory_transactions`
+--
+
+INSERT INTO `inventory_transactions` (`id`, `product_id`, `quantity_change`, `transaction_type`, `reference_id`, `notes`, `created_by`, `created_at`) VALUES
+(1, 1, -2, 'Sale', NULL, NULL, 4, '2024-10-20 16:02:39'),
+(3, 1, 1, 'Purchase', NULL, NULL, 4, '2024-10-20 16:04:41'),
+(4, 1, 1, 'Purchase', NULL, NULL, 43, '2024-10-20 16:55:02'),
+(5, 1, -1, 'Sale', NULL, NULL, 43, '2024-10-20 17:00:50'),
+(6, 1, -1, 'Sale', NULL, NULL, 43, '2024-10-20 17:03:12'),
+(7, 1, -1, 'Sale', NULL, NULL, 43, '2024-10-20 17:12:20'),
+(8, 2, -1, 'Sale', NULL, NULL, 43, '2024-10-20 17:46:06'),
+(9, 2, -1, 'Sale', NULL, NULL, 43, '2024-10-20 18:00:54'),
+(10, 1, 2, 'Purchase', NULL, NULL, 4, '2024-10-20 18:56:39'),
+(11, 2, 1, 'Purchase', NULL, NULL, 4, '2024-10-20 19:05:02'),
+(12, 2, 1, 'Purchase', NULL, NULL, 43, '2024-10-20 19:07:21'),
+(13, 2, 1, 'Purchase', NULL, NULL, 4, '2024-10-20 19:08:22'),
+(14, 1, -1, 'Sale', NULL, NULL, 4, '2024-10-20 19:30:32'),
+(15, 46, 4, 'Purchase', NULL, NULL, 4, '2024-10-20 23:34:05'),
+(16, 46, 2, 'Purchase', NULL, NULL, 4, '2024-10-20 23:34:28'),
+(17, 46, 2, 'Purchase', NULL, NULL, 4, '2024-10-20 23:34:38'),
+(18, 46, 4, 'Purchase', NULL, NULL, 4, '2024-10-20 23:34:54'),
+(19, 46, 5, 'Purchase', NULL, NULL, 4, '2024-10-20 23:35:01'),
+(20, 46, 20, 'Purchase', NULL, NULL, 4, '2024-10-20 23:35:10'),
+(21, 46, -40, 'Sale', NULL, NULL, 4, '2024-10-20 23:36:04'),
+(22, 3, -20, 'Sale', NULL, NULL, 4, '2024-10-20 23:36:33'),
+(23, 1, 20, 'Purchase', NULL, NULL, 4, '2024-10-20 23:36:56'),
+(26, 3, 3, 'Purchase', NULL, NULL, 4, '2024-10-21 00:07:10'),
+(27, 1, -1, 'Sale', NULL, NULL, 4, '2024-10-21 00:07:17'),
+(28, 1, -1, 'Sale', NULL, NULL, 4, '2024-10-21 00:07:17'),
+(29, 47, -39, 'Sale', NULL, NULL, 43, '2024-10-21 00:36:59'),
+(30, 1, -1, 'Sale', NULL, NULL, 43, '2024-10-21 00:36:59');
 
 -- --------------------------------------------------------
 
@@ -73,7 +106,28 @@ CREATE TABLE `orders` (
 INSERT INTO `orders` (`id`, `customer_name`, `order_date`, `total_amount`, `status`) VALUES
 (1, 'Alice Brown', '2024-10-04 17:18:08', 100.00, 'Delivered'),
 (2, 'Charlie Davis', '2024-10-04 17:18:08', 200.00, 'Processing'),
-(3, 'Eva Fisher', '2024-10-04 17:18:08', 75.00, 'Pending');
+(3, 'Eva Fisher', '2024-10-04 17:18:08', 75.00, 'Pending'),
+(4, 'Rei', '2024-10-19 16:00:00', 12.00, 'Pending'),
+(5, 'Rei', '2024-10-19 16:00:00', 1232.00, 'Pending'),
+(6, 'Rei', '2024-10-19 16:00:00', 123.00, 'Pending'),
+(7, 'Rei', '2024-10-19 16:00:00', 123.00, 'Pending'),
+(8, 'asd', '2024-10-19 16:00:00', 600.00, 'Pending'),
+(12, 'Ryzen', '2024-10-19 16:00:00', 8000.00, 'Pending'),
+(13, 'Rei', '2024-10-19 16:00:00', 42.01, 'Pending'),
+(14, 'Intel', '2024-10-19 16:00:00', 3600.00, 'Pending'),
+(15, 'AMD', '2024-10-19 16:00:00', 42.01, 'Pending'),
+(17, 'Intel Arc', '2024-10-19 16:00:00', 1200.00, 'Pending'),
+(18, 'Ryzen', '2024-10-19 16:00:00', 84.02, 'Pending'),
+(19, 'Intel', '2024-10-19 16:00:00', 42.01, 'Pending'),
+(20, 'Rei', '2024-10-19 16:00:00', 42.01, 'Pending'),
+(21, 'Ryzen', '2024-10-19 16:00:00', 42.01, 'Pending'),
+(23, 'AMD', '2024-10-19 16:00:00', 150.00, 'Pending'),
+(25, 'Ryzen', '2024-10-19 16:00:00', 150.00, 'Pending'),
+(26, 'Intel', '2024-10-20 16:00:00', 42.01, 'Pending'),
+(27, 'Intel', '2024-10-19 16:00:00', 48000.00, 'Pending'),
+(28, 'Ryzen', '2024-10-19 16:00:00', 10000.00, 'Pending'),
+(31, 'Ryzen', '2024-10-20 16:00:00', 84.02, 'Pending'),
+(33, 'Ryzen', '2024-10-20 16:00:00', 19500.00, 'Pending');
 
 -- --------------------------------------------------------
 
@@ -96,7 +150,30 @@ CREATE TABLE `order_items` (
 INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
 (1, 1, 1, 2, 40.00),
 (2, 2, 2, 1, 150.00),
-(3, 3, 3, 5, 15.00);
+(3, 3, 3, 5, 15.00),
+(4, 4, 1, 1, 42.01),
+(5, 5, 2, 1, 150.00),
+(6, 6, 1, 1, 42.01),
+(7, 7, 1, 1, 42.01),
+(8, 8, 1, 2, 42.01),
+(9, 12, 43, 20, 400.00),
+(10, 13, 1, 1, 42.01),
+(11, 14, 46, 3, 1200.00),
+(12, 15, 1, 1, 42.01),
+(13, 17, 43, 3, 400.00),
+(14, 18, 1, 2, 42.01),
+(15, 19, 1, 1, 42.01),
+(16, 20, 1, 1, 42.01),
+(17, 21, 1, 1, 42.01),
+(18, 23, 2, 1, 150.00),
+(19, 25, 2, 1, 150.00),
+(20, 26, 1, 1, 42.01),
+(21, 27, 46, 40, 1200.00),
+(22, 28, 3, 20, 500.00),
+(25, 31, 1, 1, 42.01),
+(26, 31, 1, 1, 42.01),
+(27, 33, 47, 39, 500.00),
+(28, 33, 1, 1, 42.01);
 
 -- --------------------------------------------------------
 
@@ -127,11 +204,12 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `sku`, `category`, `quantity`, `unit`, `purchase_price`, `selling_price`, `supplier_id`, `reorder_level`, `image`, `description`, `brand`, `date_added`, `last_updated`) VALUES
-(1, 'Brake Pad Sets', 'BP-001', 'Brake Systems', 18, 'sets', 20.00, 40.00, 1, 10, 'uploads/670b53afbb823_as.jpg', '', 'BrakeMaster', '2024-10-04 17:18:08', '2024-10-13 07:46:03'),
-(2, 'Alternator', 'ALT-001', 'Electrical', 35, 'piece', 80.00, 150.00, 3, 5, NULL, NULL, 'PowerGen', '2024-10-04 17:18:08', '2024-10-13 07:54:42'),
-(3, 'Engine Oil Filter', 'EOF-001', 'Engine', 100, 'piece', 5.00, 15.00, 1, 20, NULL, NULL, 'FilterPro', '2024-10-04 17:18:08', '2024-10-04 17:18:08'),
-(39, 'Engine Oil', '5211213', 'Oil', 28, 'Piece', 300.00, 122.00, 1, 12, '', 'Downy', 'Zonrox', '2024-10-13 04:00:21', '2024-10-13 07:51:30'),
-(43, 'Honda Motor', 'Ll13', 'Pipe', 3, 'Piece', 100.00, 400.00, 1, 2, '', 'Llll', 'BrakeMaster', '2024-10-13 04:49:37', '2024-10-13 08:17:18');
+(1, 'Brake Pad Sets', 'BP-001', 'Brake Systems', 21, 'sets', 20.01, 42.01, 1, 10, '', '', 'BrakeMasters', '2024-10-04 17:18:08', '2024-10-21 00:36:59'),
+(2, 'Alternator', 'ALT-001', 'Electrical', 3, 'piece', 80.00, 150.00, 3, 5, '', '', 'PowerGen', '2024-10-04 17:18:08', '2024-10-20 19:08:22'),
+(3, 'Engine Oil Filter', 'EOF-001', 'Engine', 3, 'piece', 100.00, 500.00, 1, 20, '', '', 'FilterPro', '2024-10-04 17:18:08', '2024-10-21 00:07:10'),
+(43, 'Honda Motor', 'Ll13', 'Pipe', 28, 'Piece', 100.00, 400.00, 1, 2, '', 'Llll', 'BrakeMaster', '2024-10-13 04:49:37', '2024-10-20 16:02:49'),
+(46, 'Honda Suspension', '54120-12', 'Suspension', 0, 'Unit', 500.00, 1200.00, 2, 2, 'uploads/671678a6a2c68_as.jpg', 'Lolz', 'Honda', '2024-10-20 15:53:17', '2024-10-21 15:52:06'),
+(47, 'Brake', '565462', 'Brake Systems', 1, 'piece', 300.00, 500.00, 2, 2, 'uploads/6715a136c9db5_Picture12.png', 'hbhbkbjbkj', 'PowerGen', '2024-10-21 00:32:54', '2024-10-21 00:36:59');
 
 -- --------------------------------------------------------
 
@@ -185,9 +263,6 @@ CREATE TABLE `suppliers` (
   `phone` varchar(20) NOT NULL,
   `address` text NOT NULL,
   `category` varchar(50) NOT NULL,
-  `status` enum('Active','Inactive') NOT NULL,
-  `rating` decimal(3,2) NOT NULL,
-  `payment_terms` varchar(100) NOT NULL,
   `logo` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -195,10 +270,10 @@ CREATE TABLE `suppliers` (
 -- Dumping data for table `suppliers`
 --
 
-INSERT INTO `suppliers` (`id`, `name`, `contact_name`, `email`, `phone`, `address`, `category`, `status`, `rating`, `payment_terms`, `logo`) VALUES
-(1, 'AutoParts Inc.', 'John Doe', 'john@autoparts.com', '123-456-7890', '123 Main St, City, Country', 'Engine Parts', 'Active', 4.50, 'Net 30', NULL),
-(2, 'Brake Masters', 'Jane Smith', 'jane@brakemasters.com', '987-654-3210', '456 Elm St, Town, Country', 'Brake Systems', 'Active', 4.20, 'Net 15', NULL),
-(3, 'Electric Solutions', 'Bob Johnson', 'bob@electricsolutions.com', '555-123-4567', '789 Oak St, Village, Country', 'Electrical Components', 'Active', 4.00, 'Net 45', NULL);
+INSERT INTO `suppliers` (`id`, `name`, `contact_name`, `email`, `phone`, `address`, `category`, `logo`) VALUES
+(1, 'Honda ', 'Christian Paul', 'sampaul@gmail.com', '091-214-124-1241', 'Lapu-magelan st', 'Engine Parts', 'uploads/6715342057936.png'),
+(2, 'Bajaj Motors', 'JamalAlbody', 'bobross@sample.com', '0912-124-21', 'UFO', 'Brake Systems', 'uploads/671534b58abf8.png'),
+(3, 'Electric Solutions', 'Chris Brown', 'CHrisblack@electricsolutions.com', '555-123-4567', '789 Oak St, Village, Country', 'Electrical Components', 'uploads/671534e923257.jpg');
 
 -- --------------------------------------------------------
 
@@ -213,7 +288,7 @@ CREATE TABLE `users` (
   `name` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `role` enum('Admin','Manager','Staff') NOT NULL,
-  `profile_picture` varchar(255) DEFAULT NULL,
+  `profile_picture` mediumblob DEFAULT NULL,
   `last_login` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -222,9 +297,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `name`, `email`, `role`, `profile_picture`, `last_login`) VALUES
-(2, 'manager', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Manager User', 'manager@example.com', 'Staff', NULL, '2024-10-04 17:18:33'),
-(3, 'staff', 'asd', 'Staff User', 'staff@example.com', 'Staff', NULL, '2024-10-06 22:26:21'),
-(4, '', '$2y$10$I36zVrE80xnNP9URtBmoCeKZokvVqyHGYk3z/zRMdsaWenW9/ehy2', 'Rezier ', 'johnmagno332@gmail.com', 'Admin', NULL, '2024-10-13 05:28:59');
+(4, '', '$2y$10$tXjBhPnHABMJSisc1Cx.uui.fJDHJAcM2TBHq/0UW5E.MzwG1p5/K', 'Rezier ', 'johnmagno332@gmail.com', 'Admin', NULL, '2024-10-20 19:18:32'),
+(43, 'Chrisbrown', '$2y$10$uBP0t/g6m0H.i0oVVkJXOO5sV4usCAXIkOmVrDjmX6JiTUu6ZHP3K', 'Chrisbrown', 'Chrisbrown@gmail.com', 'Manager', 0x68747470733a2f2f7265732e636c6f7564696e6172792e636f6d2f6464756a6b79667a6a2f696d6167652f75706c6f61642f76313732393434333236352f70726f66696c655f706963732f757365725f363731353335626635306534392e6a7067, '2024-10-21 00:35:41');
 
 -- --------------------------------------------------------
 
@@ -368,7 +442,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `inventory_transactions`
 --
 ALTER TABLE `inventory_transactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `logs`
@@ -380,19 +454,19 @@ ALTER TABLE `logs`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `reports`
@@ -410,13 +484,13 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `suppliers`
 --
 ALTER TABLE `suppliers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- Constraints for dumped tables
