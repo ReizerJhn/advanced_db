@@ -1,0 +1,20 @@
+[25-Sep-2024 16:22:31 Europe/Berlin] Error in fetch_dashboard_data.php: Unknown column 'price' in 'field list'
+[25-Sep-2024 16:22:32 Europe/Berlin] Error in fetch_dashboard_data.php: Unknown column 'price' in 'field list'
+[25-Sep-2024 16:22:32 Europe/Berlin] Error in fetch_dashboard_data.php: Unknown column 'price' in 'field list'
+[25-Sep-2024 16:22:33 Europe/Berlin] Error in fetch_dashboard_data.php: Unknown column 'price' in 'field list'
+[25-Sep-2024 16:22:33 Europe/Berlin] Error in fetch_dashboard_data.php: Unknown column 'price' in 'field list'
+[25-Sep-2024 16:22:33 Europe/Berlin] Error in fetch_dashboard_data.php: Unknown column 'price' in 'field list'
+[25-Sep-2024 16:23:49 Europe/Berlin] Error in fetch_dashboard_data.php: Unknown column 'price' in 'field list'
+[25-Sep-2024 16:23:50 Europe/Berlin] Error in fetch_dashboard_data.php: Unknown column 'price' in 'field list'
+[25-Sep-2024 16:23:51 Europe/Berlin] Error in fetch_dashboard_data.php: Unknown column 'price' in 'field list'
+[25-Sep-2024 16:23:51 Europe/Berlin] Error in fetch_dashboard_data.php: Unknown column 'price' in 'field list'
+[25-Sep-2024 16:23:51 Europe/Berlin] Error in fetch_dashboard_data.php: Unknown column 'price' in 'field list'
+[25-Sep-2024 16:23:51 Europe/Berlin] Error in fetch_dashboard_data.php: Unknown column 'price' in 'field list'
+[25-Sep-2024 16:25:09 Europe/Berlin] Error in fetch_dashboard_data.php: Unknown column 'reorder_level' in 'where clause'
+[25-Sep-2024 16:25:10 Europe/Berlin] Error in fetch_dashboard_data.php: Unknown column 'reorder_level' in 'where clause'
+[25-Sep-2024 16:25:10 Europe/Berlin] Error in fetch_dashboard_data.php: Unknown column 'reorder_level' in 'where clause'
+[25-Sep-2024 16:25:10 Europe/Berlin] Error in fetch_dashboard_data.php: Unknown column 'reorder_level' in 'where clause'
+[26-Sep-2024 02:39:32 Europe/Berlin] Error in fetch_dashboard_data.php: Table 'motorparts_inventory.vw_stock_alerts' doesn't exist
+[29-Sep-2024 17:57:07 Europe/Berlin] Error in fetch_dashboard_data.php: No connection could be made because the target machine actively refused it
+[29-Sep-2024 18:30:27 Europe/Berlin] Error in fetch_dashboard_data.php: No connection could be made because the target machine actively refused it
+[29-Sep-2024 19:32:12 Europe/Berlin] Error in fetch_dashboard_data.php: No connection could be made because the target machine actively refused it
