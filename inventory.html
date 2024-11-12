@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MotorParts Dashboard - Inventory Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .sidebar {
+            transition: transform 0.2s ease-in-out;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="flex flex-col md:flex-row h-screen">
+        <aside id="sidebar" class="sidebar fixed inset-y-0 left-0 w-64 bg-gradient-to-br from-[#6366f1] via-[#8b5cf6] to-[#d946ef] p-6 flex flex-col rounded-tr-[50px] rounded-br-[50px] z-20">
+            <h2 class="text-2xl font-bold mb-6">MotorParts Dashboard</h2>
+            <nav class="flex-grow">
+                <ul class="space-y-2">
+                    <li class="py-2 px-4 rounded hover:bg-white/10">
+                        <a href="dashboard.html" class="flex items-center w-full">
+                            <i data-lucide="package" class="mr-2"></i>
+                            Overview
+                        </a>
+                    </li>
+                    <li class="py-2 px-4 rounded hover:bg-white/10">
+                        <a href="users.html" class="flex items-center w-full">
+                            <i data-lucide="users" class="mr-2"></i>
+                            Users
+                        </a>
+                    </li>
+                    <li class="py-2 px-4 rounded bg-white/20">
+                        <a href="inventory.html" class="flex items-center w-full">
+                            <i data-lucide="box" class="mr-2"></i>
+                            Inventory
+                        </a>
+                    </li>
+
+                    <li class="py-2 px-4 rounded hover:bg-white/10">
+                        <a href="sales_orders.html" class="flex items-center w-full">
+                            <i data-lucide="plus-circle" class="mr-2"></i>
+                            Sales and Orders
+                        </a>
+                    </li>
+                  
+                    <li class="py-2 px-4 rounded hover:bg-white/10">
+                        <a href="reports.html" class="flex items-center w-full">
+                            <i data-lucide="file-text" class="mr-2"></i>
+                            Reports
+                        </a>
+                    </li>
+                    <li class="py-2 px-4 rounded hover:bg-white/10">
+                        <a href="suppliers.html" class="flex items-center w-full">
+                            <i data-lucide="truck" class="mr-2"></i>
+                            Suppliers
+                        </a>
+                    </li>
+                    <li class="py-2 px-4 rounded hover:bg-white/10">
+                        <a href="#" class="flex items-center w-full">
+                            <i data-lucide="settings" class="mr-2"></i>
+                            Settings
+                        </a>
+                    </li>
+                    <li class="py-2 px-4 rounded hover:bg-white/10">
+                        <a href="#" class="flex items-center w-full">
+                            <i data-lucide="clipboard-list" class="mr-2"></i>
+                            Logs
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="mt-auto">
+                <a href="#" class="block py-2 px-4 hover:bg-white/10 rounded flex items-center">
+                    <i data-lucide="user" class="mr-2"></i>
+                    User Account
+                </a>
+                <button id="logoutBtn" class="w-full text-left block py-2 px-4 hover:bg-white/10 rounded flex items-center text-red-200">
+                    <i data-lucide="log-out" class="mr-2"></i>
+                    Log Out
+                </button>
+            </div>
+        </aside>
+
+        <div id="overlay" class="fixed inset-0 bg-black opacity-50 z-10 hidden md:hidden"></div>
+
+        <main class="flex-1 p-4 md:p-6 overflow-auto ml-0 md:ml-64">
+            <button id="menuBtn" class="md:hidden p-2 text-white z-30">
+                <i data-lucide="menu"></i>
+            </button>
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold mb-4 md:mb-0">Inventory Management</h1>
+                <div class="flex items-center space-x-4">
+                    <form id="searchForm" class="relative w-full md:w-auto">
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            id="searchInput"
+                            class="w-full md:w-auto bg-gray-800 text-white rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                        />
+                        <i data-lucide="search" class="absolute left-3 top-2.5 text-gray-400"></i>
+                    </form>
+                    <button class="relative">
+                        <i data-lucide="bell" class="text-gray-400 hover:text-white transition-colors"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 rounded-full w-4 h-4 text-xs flex items-center justify-center">3</span>
+                    </button>
+                    <button>
+                        <i data-lucide="database" class="text-gray-400 hover:text-white transition-colors"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-gray-800 p-4 md:p-6 rounded-lg">
+                <div id="errorMessage" class="bg-red-500 text-white p-4 rounded-lg mb-4 hidden"></div>
+                <!-- Replace the existing Add New Item button section with this updated version -->
+                <div class="flex flex-col md:flex-row justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold mb-4 md:mb-0">Inventory Items</h2>
+                    <div class="flex space-x-2">
+                        <button id="addItemBtn" class="bg-purple-600 hover:bg-purple-700 py-2 px-4 rounded-md flex items-center">
+                            <i data-lucide="plus" class="mr-2"></i> Add New Item
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Add this section for inventory status -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-2">Total Items</h3>
+                        <p id="totalItems" class="text-2xl font-bold">0</p>
+                    </div>
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-2">Low Stock</h3>
+                        <p id="lowStockCount" class="text-2xl font-bold text-yellow-500">0</p>
+                    </div>
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-2">Out of Stock</h3>
+                        <p id="outOfStockCount" class="text-2xl font-bold text-red-500">0</p>
+                    </div>
+                    <div class="bg-gray-700 p-4 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-2">Total Value</h3>
+                        <p id="totalValue" class="text-2xl font-bold">₱0.00</p>
+                    </div>
+                </div>
+                <!-- End of inventory status section -->
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr>
+                                <th class="text-left py-3 px-4 text-white">Name</th>
+                                <th class="text-left py-3 px-4 text-white">SKU</th>
+                                <th class="text-left py-3 px-4 text-white">Category</th>
+                                <th class="text-left py-3 px-4 text-white">Quantity</th>
+                                <th class="text-left py-3 px-4 text-white">Unit</th>
+                                <th class="text-left py-3 px-4 text-white">Purchase Price</th>
+                                <th class="text-left py-3 px-4 text-white">Selling Price</th>
+                                <th class="text-left py-3 px-4 text-white">Supplier ID</th>
+                                <th class="text-left py-3 px-4 text-white">Reorder Level</th>
+                                <th class="text-left py-3 px-4 text-white">Date Added</th>
+                                <th class="text-left py-3 px-4 text-white">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTableBody">
+                            <!-- Inventory items will be dynamically inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+         
+    <!-- Add Item Modal -->
+    <div id="addItemModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg w-[90vw] max-w-4xl max-h-[90vh] overflow-y-auto">
+            <h2 class="text-xl font-semibold mb-4 text-gray-900">Add New Inventory Item</h2>
+            <form id="addItemForm" class="space-y-4" enctype="multipart/form-data">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="itemName" name="name" placeholder="Item Name" class="w-full p-2 border rounded text-gray-900">
+                    <input type="text" id="itemSKU" name="sku" placeholder="SKU" class="w-full p-2 border rounded text-gray-900">
+                    <input type="text" id="itemCategory" name="category" placeholder="Category" class="w-full p-2 border rounded text-gray-900">
+                    <input type="number" id="itemQuantity" name="quantity" placeholder="Quantity" class="w-full p-2 border rounded text-gray-900">
+                    <input type="text" id="itemUnit" name="unit" placeholder="Unit of Measurement" class="w-full p-2 border rounded text-gray-900">
+                    <input type="number" id="itemPurchasePrice" name="purchase_price" placeholder="Purchase Price" step="0.01" class="w-full p-2 border rounded text-gray-900">
+                    <input type="number" id="itemSellingPrice" name="selling_price" placeholder="Selling Price" step="0.01" class="w-full p-2 border rounded text-gray-900">
+                    <select id="itemSupplierID" name="supplier_id" class="w-full p-2 border rounded text-gray-900">
+                        <option value="">Select a supplier</option>
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                    <input type="number" id="itemReorderLevel" name="reorder_level" placeholder="Reorder Level" class="w-full p-2 border rounded text-gray-900">
+                    <input type="text" id="itemBrand" name="brand" placeholder="Brand" class="w-full p-2 border rounded text-gray-900">
+                </div>
+                <div id="dropArea" class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer">
+                    <p>Drag & drop an image here, or click to select</p>
+                    <input type="file" id="itemImage" name="image" accept="image/*" class="hidden">
+                </div>
+                <textarea id="itemDescription" name="description" placeholder="Item Description" class="w-full p-2 border rounded text-gray-900"></textarea>
+                <div class="flex justify-end space-x-2">
+                    <button type="submit" class="bg-purple-600 text-white p-2 rounded hover:bg-purple-700">Add Item</button>
+                    <button type="button" id="closeAddItemModal" class="bg-gray-300 text-gray-800 p-2 rounded hover:bg-gray-400">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Item Modal -->
+    <div id="editItemModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg w-[90vw] max-w-4xl max-h-[90vh] overflow-y-auto">
+            <h2 class="text-xl font-semibold mb-4 text-gray-900">Edit Inventory Item</h2>
+            <form id="editItemForm" class="space-y-4" enctype="multipart/form-data">
+                <input type="hidden" id="editItemId" name="id">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="editItemName" name="name" placeholder="Item Name" class="w-full p-2 border rounded text-gray-900">
+                    <input type="text" id="editItemSKU" name="sku" placeholder="SKU" class="w-full p-2 border rounded text-gray-900">
+                    <input type="text" id="editItemCategory" name="category" placeholder="Category" class="w-full p-2 border rounded text-gray-900">
+                    <input type="number" id="editItemQuantity" name="quantity" placeholder="Quantity" class="w-full p-2 border rounded text-gray-900">
+                    <input type="text" id="editItemUnit" name="unit" placeholder="Unit of Measurement" class="w-full p-2 border rounded text-gray-900">
+                    <input type="number" id="editItemPurchasePrice" name="purchase_price" placeholder="Purchase Price" step="0.01" class="w-full p-2 border rounded text-gray-900">
+                    <input type="number" id="editItemSellingPrice" name="selling_price" placeholder="Selling Price" step="0.01" class="w-full p-2 border rounded text-gray-900">
+                    <select id="editItemSupplierID" name="supplier_id" class="w-full p-2 border rounded text-gray-900">
+                        <option value="">Select a supplier</option>
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                    <input type="number" id="editItemReorderLevel" name="reorder_level" placeholder="Reorder Level" class="w-full p-2 border rounded text-gray-900">
+                    <input type="text" id="editItemBrand" name="brand" placeholder="Brand" class="w-full p-2 border rounded text-gray-900">
+                </div>
+                <div id="editDropArea" class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer">
+                    <p>Drag & drop an image here, or click to select</p>
+                    <input type="file" id="editItemImage" name="image" accept="image/*" class="hidden">
+                </div>
+                <textarea id="editItemDescription" name="description" placeholder="Item Description" class="w-full p-2 border rounded text-gray-900"></textarea>
+                <div class="flex justify-end space-x-2">
+                    <button type="submit" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Update Item</button>
+                    <button type="button" id="closeEditItemModal" class="bg-gray-300 text-gray-800 p-2 rounded hover:bg-gray-400">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Item Details Modal -->
+    <div id="itemDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+        <div class="bg-white p-6 rounded-lg w-[90vw] max-w-3xl max-h-[90vh] overflow-y-auto">
+            <h2 class="text-xl font-semibold mb-4 text-gray-900">Product Details</h2>
+            <div id="itemDetailsContent" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Item details will be dynamically inserted here -->
+            </div>
+            <div class="mt-6 flex justify-end space-x-2">
+                <button id="updateItemBtn" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Update Item</button>
+                <button id="deleteItemBtn" class="bg-red-500 text-white p-2 rounded hover:bg-red-600">Delete Item</button>
+                <button id="closeItemDetailsModal" class="bg-gray-300 text-gray-800 p-2 rounded hover:bg-gray-400">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add this modal after the other modals in the HTML -->
+    <div id="stockAdjustmentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg w-[90vw] max-w-md">
+            <h2 id="stockAdjustmentTitle" class="text-xl font-semibold mb-4 text-gray-900"></h2>
+            <form id="stockAdjustmentForm" class="space-y-4">
+                <input type="hidden" id="stockAdjustmentType" name="type">
+                <div>
+                    <label for="stockAdjustmentItem" class="block text-sm font-medium text-gray-700 mb-1">Select Item</label>
+                    <select id="stockAdjustmentItem" name="item_id" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-900">
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </div>
+                <div>
+                    <label for="stockAdjustmentQuantity" class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                    <input type="number" id="stockAdjustmentQuantity" name="quantity" min="1" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-900" required>
+                </div>
+                <div class="flex justify-end space-x-2 mt-4">
+                    <button type="submit" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Submit</button>
+                    <button type="button" id="closeStockAdjustmentModal" class="bg-gray-300 text-gray-800 p-2 rounded hover:bg-gray-400">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // DOM elements
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuBtn = document.getElementById('menuBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const searchForm = document.getElementById('searchForm');
+        const searchInput = document.getElementById('searchInput');
+        const inventoryTableBody = document.getElementById('inventoryTableBody');
+        const addItemBtn = document.getElementById('addItemBtn');
+        const addItemModal = document.getElementById('addItemModal');
+        const closeAddItemModal = document.getElementById('closeAddItemModal');
+        const addItemForm = document.getElementById('addItemForm');
+        const itemDetailsModal = document.getElementById('itemDetailsModal');
+        const itemDetailsContent = document.getElementById('itemDetailsContent');
+        const closeItemDetailsModal = document.getElementById('closeItemDetailsModal');
+        const updateItemBtn = document.getElementById('updateItemBtn');
+        const deleteItemBtn = document.getElementById('deleteItemBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const stockInBtn = document.getElementById('stockInBtn');
+        const stockOutBtn = document.getElementById('stockOutBtn');
+        const userTableBody = document.getElementById('userTableBody');
+
+        let items = [];
+        let selectedItem = null;
+
+        // Toggle sidebar
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('hidden');
+        });
+
+        // Close sidebar when clicking outside
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.add('hidden');
+        });
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', () => {
+            console.log('Logging out...');
+            // Redirect to the login page
+            window.location.href = 'Login.html';
+        });
+
+        // Search functionality
+        searchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.log('Searching for:', searchInput.value);
+            // Implement search logic here
+        });
+
+        // Fetch inventory items
+        async function fetchInventory() {
+            try {
+                const response = await fetch('inventory_api.php?action=get_inventory');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch inventory');
+                }
+                const data = await response.json();
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                items = data.products;
+                console.log('Fetched items:', items); // Add this line for debugging
+                renderInventory();
+                renderInventoryStatus(data.inventoryStatus);
+            } catch (error) {
+                console.error('Error fetching inventory:', error);
+                showError('Error fetching inventory. Please try again.');
+            }
+        }
+
+        // Render inventory items
+        function renderInventory() {
+            inventoryTableBody.innerHTML = items.map(item => `
+                <tr class="cursor-pointer hover:bg-gray-700" data-id="${item.id}">
+                    <td class="py-2 px-4">${item.name}</td>
+                    <td class="py-2 px-4">${item.sku}</td>
+                    <td class="py-2 px-4">${item.category}</td>
+                    <td class="py-2 px-4">${item.quantity}</td>
+                    <td class="py-2 px-4">${item.unit}</td>
+                    <td class="py-2 px-4">₱${parseFloat(item.purchase_price).toFixed(2)}</td>
+                    <td class="py-2 px-4">₱${parseFloat(item.selling_price).toFixed(2)}</td>
+                    <td class="py-2 px-4">${item.supplier_id}</td>
+                    <td class="py-2 px-4">${item.reorder_level}</td>
+                    <td class="py-2 px-4">${item.date_added}</td>
+                    <td class="py-2 px-4">
+                        <button class="edit-btn mr-2 text-blue-500 hover:text-blue-600" data-id="${item.id}">
+                            <i data-lucide="edit" class="w-4 h-4"></i>
+                        </button>
+                        <button class="delete-btn text-red-500 hover:text-red-600" data-id="${item.id}">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+            lucide.createIcons();
+
+            // Add event listeners for edit and delete buttons
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const itemId = btn.dataset.id;
+                    openEditItemModal(itemId);
+                });
+            });
+
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteItem(btn.dataset.id);
+                });
+            });
+
+            // Add event listener for row click to open item details
+            document.querySelectorAll('tr[data-id]').forEach(row => {
+                row.addEventListener('click', (e) => {
+                    if (!e.target.closest('.edit-btn') && !e.target.closest('.delete-btn')) {
+                        openItemDetailsModal(row.dataset.id);
+                    }
+                });
+            });
+        }
+
+        // Open add item modal
+        addItemBtn.addEventListener('click', () => {
+            addItemModal.classList.remove('hidden');
+            addItemModal.classList.add('flex');
+            fetchSuppliers(); // Add this line to fetch suppliers when opening the modal
+        });
+
+        // Close add item modal
+        closeAddItemModal.addEventListener('click', () => {
+            addItemModal.classList.add('hidden');
+            addItemModal.classList.remove('flex');
+        });
+
+        // Add new item
+        addItemForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(addItemForm);
+            formData.append('action', 'add_item');
+
+            try {
+                const response = await fetch('inventory_api.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+                if (result.success) {
+                    await fetchInventory();
+                    addItemModal.classList.add('hidden');
+                    addItemModal.classList.remove('flex');
+                    addItemForm.reset();
+                    showSuccess('Item added successfully');
+                } else {
+                    throw new Error('Failed to add item');
+                }
+            } catch (error) {
+                console.error('Error adding item:', error);
+                showError('Error adding item: ' + error.message);
+            }
+        });
+
+
+        async function fetchUsers() {
+        try {
+            const response = await fetch('fetch_users_data.php');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            renderUsers(data.users);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            alert('Failed to fetch users data. Check the console for more details.');
+        }
+    }
+
+
+    
+
+        function addUserEventListeners() {
+        document.querySelectorAll('.edit-user').forEach(btn => {
+            btn.addEventListener('click', () => openEditUserModal(btn.dataset.id));
+        });
+        document.querySelectorAll('.reset-password').forEach(btn => {
+            btn.addEventListener('click', () => openResetPasswordModal(btn.dataset.id));
+        });
+        document.querySelectorAll('.delete-user').forEach(btn => {
+            btn.addEventListener('click', () => deleteUser(btn.dataset.id));
+        });
+    }
+
+        // Open item details modal
+        function openItemDetailsModal(itemId) {
+            selectedItem = items.find(item => item.id === parseInt(itemId));
+            if (selectedItem) {
+                itemDetailsContent.innerHTML = `
+                    <div>
+                        <img src="${getImagePath(selectedItem.image)}" alt="${selectedItem.name}" class="w-full h-auto rounded-lg">
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2 text-gray-900">${selectedItem.name}</h3>
+                        <p class="text-gray-500 mb-4">Brand: ${selectedItem.brand}</p>
+                        <p class="mb-4 text-gray-700">${selectedItem.description}</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-gray-500">SKU</p>
+                                <p class="text-gray-900">${selectedItem.sku}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500">Category</p>
+                                <p class="text-gray-900">${selectedItem.category}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500">Quantity</p>
+                                <p class="text-gray-900">${selectedItem.quantity} ${selectedItem.unit}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500">Reorder Level</p>
+                                <p class="text-gray-900">${selectedItem.reorder_level}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500">Purchase Price</p>
+                                <p class="text-gray-900">₱${parseFloat(selectedItem.purchase_price).toFixed(2)}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500">Selling Price</p>
+                                <p class="text-gray-900">₱${parseFloat(selectedItem.selling_price).toFixed(2)}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500">Supplier ID</p>
+                                <p class="text-gray-900">${selectedItem.supplier_id}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-500">Date Added</p>
+                                <p class="text-gray-900">${selectedItem.date_added}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                itemDetailsModal.classList.remove('hidden');
+                itemDetailsModal.classList.add('flex');
+            }
+        }
+
+        // Close item details modal
+        closeItemDetailsModal.addEventListener('click', () => {
+            itemDetailsModal.classList.add('hidden');
+            itemDetailsModal.classList.remove('flex');
+            selectedItem = null;
+        });
+
+        // Update item
+        updateItemBtn.addEventListener('click', () => {
+            if (selectedItem) {
+                console.log('Update button clicked for item:', selectedItem);
+                openEditItemModal(selectedItem.id);
+            }
+        });
+
+        // Delete item
+        async function deleteItem(itemId) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                try {
+                    const response = await fetch('inventory_api.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `action=delete_item&id=${itemId}`
+                    });
+                    const result = await response.json();
+                    if (result.error) {
+                        throw new Error(result.error);
+                    }
+                    if (result.success) {
+                        await fetchInventory();
+                        showSuccess('Item deleted successfully');
+                    } else {
+                        throw new Error('Failed to delete item');
+                    }
+                } catch (error) {
+                    console.error('Error deleting item:', error);
+                    showError('Error deleting item: ' + error.message);
+                }
+            }
+        }
+
+        deleteItemBtn.addEventListener('click', () => {
+            if (selectedItem) {
+                deleteItem(selectedItem.id);
+            }
+        });
+
+        // Helper function to get image path
+        function getImagePath(imagePath) {
+            if (imagePath.startsWith('http')) {
+                return imagePath;
+            }
+            return '/images/sample.png'; // Fallback image
+        }
+
+        // Show error message
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('hidden');
+            
+            // If the error is about the supplier, highlight the supplier field
+            if (message.includes('Supplier does not exist')) {
+                const supplierSelect = document.getElementById('itemSupplierID');
+                supplierSelect.classList.add('border-red-500');
+                supplierSelect.classList.add('bg-red-100');
+            }
+            
+            setTimeout(() => {
+                errorMessage.classList.add('hidden');
+                // Remove highlight from supplier field
+                const supplierSelect = document.getElementById('itemSupplierID');
+                supplierSelect.classList.remove('border-red-500');
+                supplierSelect.classList.remove('bg-red-100');
+            }, 5000);
+        }
+
+        // Add this new function to render inventory status
+        function renderInventoryStatus(status) {
+            document.getElementById('totalItems').textContent = status.totalItems;
+            document.getElementById('lowStockCount').textContent = status.lowStockCount;
+            document.getElementById('outOfStockCount').textContent = status.outOfStockCount;
+            document.getElementById('totalValue').textContent = `₱${status.totalValue.toFixed(2)}`;
+        }
+
+        // Add these new variables
+        const editItemModal = document.getElementById('editItemModal');
+        const editItemForm = document.getElementById('editItemForm');
+        const closeEditItemModal = document.getElementById('closeEditItemModal');
+
+        // Add this new function to open the edit modal
+        function openEditItemModal(itemId) {
+            console.log('Opening edit modal for item ID:', itemId);
+            console.log('Current items:', items);
+            const item = items.find(item => item.id === parseInt(itemId));
+            if (item) {
+                selectedItem = item;
+                document.getElementById('editItemId').value = item.id;
+                document.getElementById('editItemName').value = item.name;
+                document.getElementById('editItemSKU').value = item.sku;
+                document.getElementById('editItemCategory').value = item.category;
+                document.getElementById('editItemQuantity').value = item.quantity;
+                document.getElementById('editItemUnit').value = item.unit;
+                document.getElementById('editItemPurchasePrice').value = item.purchase_price;
+                document.getElementById('editItemSellingPrice').value = item.selling_price;
+                document.getElementById('editItemReorderLevel').value = item.reorder_level;
+                document.getElementById('editItemDescription').value = item.description;
+                document.getElementById('editItemBrand').value = item.brand;
+
+                const editDropArea = document.getElementById('editDropArea');
+                const editDropAreaText = editDropArea.querySelector('p');
+                if (item.image) {
+                    editDropAreaText.textContent = `Current image: ${item.image}`;
+                    // Add a preview of the current image
+                    const imgPreview = document.createElement('img');
+                    imgPreview.src = getImagePath(item.image);
+                    imgPreview.alt = item.name;
+                    imgPreview.className = 'w-32 h-32 object-cover mt-2';
+                    editDropArea.appendChild(imgPreview);
+                } else {
+                    editDropAreaText.textContent = 'Drag & drop an image here, or click to select';
+                }
+
+                editItemModal.classList.remove('hidden');
+                editItemModal.classList.add('flex');
+                
+                fetchSuppliers().then(() => {
+                    const supplierSelect = document.getElementById('editItemSupplierID');
+                    if (item.supplier_id) {
+                        supplierSelect.value = item.supplier_id;
+                    } else {
+                        supplierSelect.value = '';
+                    }
+                    
+                    // Add or update a text element to display the current supplier name
+                    let supplierNameElement = document.getElementById('currentSupplierName');
+                    if (!supplierNameElement) {
+                        supplierNameElement = document.createElement('p');
+                        supplierNameElement.id = 'currentSupplierName';
+                        supplierNameElement.className = 'text-sm text-gray-600 mt-1';
+                        supplierSelect.parentNode.insertBefore(supplierNameElement, supplierSelect.nextSibling);
+                    }
+                    supplierNameElement.textContent = item.supplier_name ? `Current supplier: ${item.supplier_name}` : 'No supplier selected';
+                });
+            } else {
+                console.error('Item not found for ID:', itemId);
+                showError('Error: Item not found');
+            }
+        }
+
+        // Add event listener for closing the edit modal
+        closeEditItemModal.addEventListener('click', () => {
+            editItemModal.classList.add('hidden');
+            editItemModal.classList.remove('flex');
+            clearEditForm();
+        });
+
+        // Edit item
+        editItemForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(editItemForm);
+            formData.append('action', 'update_item');
+
+            try {
+                const response = await fetch('inventory_api.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+                if (result.success) {
+                    await fetchInventory();
+                    editItemModal.classList.add('hidden');
+                    editItemModal.classList.remove('flex');
+                    showSuccess('Item updated successfully');
+                } else {
+                    throw new Error('Failed to update item');
+                }
+            } catch (error) {
+                console.error('Error updating item:', error);
+                showError('Error updating item: ' + error.message);
+            }
+        });
+
+        // File drag and drop functionality
+        const dropArea = document.getElementById('dropArea');
+        const fileInput = document.getElementById('itemImage');
+        const editDropArea = document.getElementById('editDropArea');
+        const editFileInput = document.getElementById('editItemImage');
+
+        function setupDragAndDrop(dropArea, fileInput) {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight(e) {
+                dropArea.classList.add('bg-gray-100');
+            }
+
+            function unhighlight(e) {
+                dropArea.classList.remove('bg-gray-100');
+            }
+
+            dropArea.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                fileInput.files = files;
+                updateDropAreaText(dropArea, files[0].name);
+            }
+
+            dropArea.addEventListener('click', () => fileInput.click());
+
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length > 0) {
+                    updateDropAreaText(dropArea, fileInput.files[0].name);
+                }
+            });
+        }
+
+        function updateDropAreaText(dropArea, fileName) {
+            const p = dropArea.querySelector('p');
+            p.textContent = `File selected: ${fileName}`;
+        }
+
+        setupDragAndDrop(dropArea, fileInput);
+        setupDragAndDrop(editDropArea, editFileInput);
+
+        // Show success message
+        function showSuccess(message) {
+            const successMessage = document.createElement('div');
+            successMessage.textContent = message;
+            successMessage.classList.add('bg-green-500', 'text-white', 'p-4', 'rounded-lg', 'mb-4');
+            errorMessage.parentNode.insertBefore(successMessage, errorMessage);
+            setTimeout(() => {
+                successMessage.remove();
+            }, 5000);
+        }
+
+        // Initial fetch
+        fetchInventory();
+
+        // Add this function if it doesn't exist already
+        async function fetchSuppliers() {
+            try {
+                const response = await fetch('inventory_api.php?action=get_suppliers');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch suppliers');
+                }
+                const suppliers = await response.json();
+                const addSupplierSelect = document.getElementById('itemSupplierID');
+                const editSupplierSelect = document.getElementById('editItemSupplierID');
+                
+                const supplierOptions = '<option value="">Select a supplier</option>' +
+                    suppliers.map(supplier => `<option value="${supplier.id}">${supplier.name}</option>`).join('');
+                
+                addSupplierSelect.innerHTML = supplierOptions;
+                editSupplierSelect.innerHTML = supplierOptions;
+            } catch (error) {
+                console.error('Error fetching suppliers:', error);
+                showError('Error fetching suppliers. Please try again.');
+            }
+        }
+
+        // Add this helper function if it doesn't exist
+        function getImagePath(imagePath) {
+            if (imagePath && imagePath.startsWith('http')) {
+                return imagePath;
+            }
+            return imagePath ? imagePath : '/images/sample.png'; // Fallback image
+        }
+
+        // Make sure to call fetchInventory() when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchInventory();
+        });
+
+        // Add this function to clear the edit form and remove any existing image preview
+        function clearEditForm() {
+            editItemForm.reset();
+            const editDropArea = document.getElementById('editDropArea');
+            const imgPreview = editDropArea.querySelector('img');
+            if (imgPreview) {
+                imgPreview.remove();
+            }
+            editDropArea.querySelector('p').textContent = 'Drag & drop an image here, or click to select';
+        }
+
+        // Add these event listeners after the other event listeners
+        stockInBtn.addEventListener('click', () => openStockAdjustmentModal('in'));
+        stockOutBtn.addEventListener('click', () => openStockAdjustmentModal('out'));
+
+        // Add this function to handle opening the stock adjustment modal
+        function openStockAdjustmentModal(type) {
+            stockAdjustmentTitle.textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} Stock`;
+            stockAdjustmentType.value = type;
+            populateItemSelect();
+            stockAdjustmentModal.classList.remove('hidden');
+            stockAdjustmentModal.classList.add('flex');
+        }
+
+        closeStockAdjustmentModal.addEventListener('click', () => {
+            stockAdjustmentModal.classList.add('hidden');
+            stockAdjustmentModal.classList.remove('flex');
+            stockAdjustmentForm.reset();
+        });
+
+        function populateItemSelect() {
+            stockAdjustmentItem.innerHTML = '<option value="">Select an item</option>' +
+                items.map(item => `<option value="${item.id}">${item.name} (Current stock: ${item.quantity})</option>`).join('');
+        }
+
+        stockAdjustmentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(stockAdjustmentForm);
+            formData.append('action', 'adjust_stock');
+
+            try {
+                const response = await fetch('inventory_api.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to adjust stock');
+                }
+                const result = await response.json();
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+                await fetchInventory();
+                stockAdjustmentModal.classList.add('hidden');
+                stockAdjustmentModal.classList.remove('flex');
+                stockAdjustmentForm.reset();
+                showSuccess('Stock adjusted successfully');
+            } catch (error) {
+                console.error('Error adjusting stock:', error);
+                showError('Error adjusting stock: ' + error.message);
+            }
+        });
+        // Function to hide menu items based on user role
+        function adjustMenuForUserRole(role) {
+            const menuItems = document.querySelectorAll('nav ul li');
+            menuItems.forEach(item => {
+                const link = item.querySelector('a');
+                if (role === 'Manager') {
+                    if (link.textContent.trim() === 'Users' || 
+                        link.textContent.trim() === 'Inventory' || 
+                        link.textContent.trim() === 'Suppliers') {
+                        item.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        // Function to get user role from session storage
+        function getUserRole() {
+            return sessionStorage.getItem('userRole') || 'staff'; // Default to 'staff' if no role is set
+        }
+
+        // Call this function when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const userRole = getUserRole();
+            adjustMenuForUserRole(userRole);
+        });
+    </script>
+</body>
+</html>
